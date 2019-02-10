@@ -1,0 +1,11 @@
+installation_directory: /home/bag2/opt/rnaseq_pipeline
+working_directory: /home/bag2/temp
+main_folder: GSE101422_rnaseq
+number_of_samples: 4
+url_genome: ftp://ftp.ensemblgenomes.org/pub/release-42/plants/fasta/arabidopsis_thaliana/dna/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa.gz
+url_annotation: ftp://ftp.ensemblgenomes.org/pub/release-42/plants/gtf/arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.42.gtf.gz
+acc_sample1: SRR5826942
+acc_sample2: SRR5826945
+acc_sample3: SRR5826948
+acc_sample4: SRR5826951
+

@@ -1,0 +1,15 @@
+installation_directory: /home/bag2/opt/rnaseq_pipeline
+working_directory: /home/bag2/temp
+main_folder: examen_rnaseq
+number_of_samples: 4
+genome: /home/bag2/lavidaesbella/rna_seq/genome/chr5.fa.gz
+annotation: /home/bag2/lavidaesbella/rna_seq/annotation/chr5.gtf.gz
+acc_sample_1: /home/bag2/lavidaesbella/rna_seq/samples/sample_1/abc_7dag_chr5_1.fastq.gz
+acc_sample_2: /home/bag2/lavidaesbella/rna_seq/samples/sample_2/abc_7dag_chr5_2.fastq.gz
+acc_sample_3: /home/bag2/lavidaesbella/rna_seq/samples/sample_3/col0_7dag_chr5_1.fastq.gz
+acc_sample_4: /home/bag2/lavidaesbella/rna_seq/samples/sample_4/col0_7dag_chr5_2.fastq.gz
+name_sample_1: abc_7dag_chr5_1.fastq
+name_sample_2: abc_7dag_chr5_2.fastq
+name_sample_3: col0_7dag_chr5_1.fastq
+name_sample_4: col0_7dag_chr5_2.fastq
+

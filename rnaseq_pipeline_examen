@@ -1,0 +1,120 @@
+#! /bin/bash
+
+## Authors: Laura e Inés
+## Date: 22/10/2018
+
+## Load parameters from file
+
+## Input file name
+PARAMS=$1
+
+## Load installation directory
+INS_DIR=$(grep installation_directory $PARAMS | awk '{ print $2} ')
+echo $INS_DIR
+
+## Load working directory
+WD=$(grep working_directory $PARAMS | awk '{ print $2 }')
+echo $WD
+
+## Load main folder
+MF=$(grep main_folder $PARAMS | awk '{ print $2 }')
+echo $MF
+
+## Load number of samples
+NS=$(grep number_of_samples $PARAMS | awk '{print $2 }')
+echo $NS
+
+## Load reference genome
+GENOME=$(grep genome $PARAMS | awk '{ print $2 }')
+echo $GENOME
+
+## Load annotation
+ANNOTATION=$(grep annotation $PARAMS | awk '{ print $2 }')
+echo $ANNOTATION
+
+## Load accession numbers for each sample
+SAMPLES=()
+i=0
+j=1
+
+while [ $i -lt $NS ]
+do
+        SAMPLES[$i]=$(grep name_sample_$j $PARAMS | awk '{ print $2 }')
+        ((i++))
+        ((j++))
+done
+
+echo ${SAMPLES[@]}
+
+ACC_SAMPLES=()
+i=0
+j=1
+
+while [ $i -lt $NS ]
+do
+        ACC_SAMPLES[$i]=$(grep acc_sample_$j $PARAMS | awk '{ print $2 }')
+        ((i++))
+        ((j++))
+done
+
+echo ${ACC_SAMPLES[@]}
+
+## BUILD WORKING DIRECTORY
+
+# Access working directory
+cd $WD
+
+# Build and access main folder 
+mkdir $MF
+cd $MF
+
+##  Create subfolders
+mkdir genome annotation log results samples
+
+## Create samples folders
+cd samples
+
+i=1
+
+while [ $i -le $NS ]
+do
+	mkdir sample$i
+	((i++))
+done
+
+## Download genome
+cd ../genome
+cp -a $GENOME .
+gunzip chr5.fa.gz
+mv chr5.fa genome.fa
+
+## Download annotation
+cd ../annotation
+cp -a $ANNOTATION .
+gunzip chr5.gtf.gz
+mv chr5.gtf annotation.gtf
+
+## Extract splice sites and exons
+extract_splice_sites.py annotation.gtf > splice.ss
+extract_exons.py annotation.gtf > annot_exons.exon
+
+## Access to genome folder and create index
+cd ../genome
+hisat2-build --ss ../annotation/splice.ss --exon ../annotation/annot_exons.exon genome.fa index
+echo "Index done"
+
+## Parallel sample processing
+echo ${SAMPLES[1]}
+
+i=1
+j=0
+
+while [ $i -le $NS ]
+do
+	qsub -N sample_processing_$i -o sample_processing_$i $INS_DIR/sample_processing.sh $i $INS_DIR $WD $MF ${SAMPLES[$j]} ${ACC_SAMPLES[$j]} $WD/$MF/annotation/annotation.gtf $NS $WD/$MF/genome/index
+	((i++))
+	((j++))
+done
+
+
+
